@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ribbons.Data;
+using Ribbons.Loyalty.Data.Definitions;
 using Ribbons.Users;
 using Ribbons.Users.Data;
 
@@ -23,7 +24,7 @@ namespace Ribbons.Loyalty.Data.Databases
                 .SetupUserModel()
                 .HasData(new UserType
                 {
-                    UserTypeId = 1,
+                    UserTypeId = LoyaltyUserTypeId.Admin,
                     Code = "admin",
                     Name = "Administrator",
                     Description = "System administrator. Manages global settings for the loyalty platform"

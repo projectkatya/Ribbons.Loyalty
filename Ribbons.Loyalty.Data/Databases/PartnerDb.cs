@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ribbons.Data;
+using Ribbons.Loyalty.Data.Definitions;
 using Ribbons.Users;
 using Ribbons.Users.Data;
 
@@ -23,14 +24,14 @@ namespace Ribbons.Loyalty.Data.Databases
                 .SetupUserModel()
                 .HasData(new UserType
                 {
-                    UserTypeId = 2,
+                    UserTypeId = LoyaltyUserTypeId.PartnerAdmin,
                     Code = "partner_admin",
                     Name = "Partner Administrator",
                     Description = "Partner administrator. Manages settings for the partner"
                 })
                 .HasData(new UserType
                 {
-                    UserTypeId = 3,
+                    UserTypeId = LoyaltyUserTypeId.Member,
                     Code = "member",
                     Name = "Member",
                     Description = "Members who signed up for this partners' loyalty programs"

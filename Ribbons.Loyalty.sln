@@ -11,14 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Data", "..\Ribbons\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Users", "..\Ribbons\Ribbons.Users\Ribbons.Users.csproj", "{1B8E96E7-251A-4815-A465-F7F28704C5DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.Data", "Ribbons.Loyalty.Data\Ribbons.Loyalty.Data.csproj", "{ED0C8511-2390-4639-AA30-23954010C0D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Loyalty.Data", "Ribbons.Loyalty.Data\Ribbons.Loyalty.Data.csproj", "{ED0C8511-2390-4639-AA30-23954010C0D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8905210F-D28C-4757-B5F7-EF82EDD04AE7}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.Services", "Ribbons.Loyalty.Services\Ribbons.Loyalty.Services.csproj", "{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Loyalty.Services", "Ribbons.Loyalty.Services\Ribbons.Loyalty.Services.csproj", "{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.Web.AdminControlPanel", "Ribbons.Loyalty.Web.AdminControlPanel\Ribbons.Loyalty.Web.AdminControlPanel.csproj", "{E6BC752B-3485-4BEB-9624-A69E322499A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +48,10 @@ Global
 		{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
