@@ -24,7 +24,7 @@ namespace Ribbons.Loyalty.Data.Databases
                 .SetupUserModel()
                 .HasData(new UserType
                 {
-                    UserTypeId = LoyaltyUserTypeId.Admin,
+                    UserTypeId = LoyaltyUser.Admin.ConvertTo<int>(),
                     Code = "admin",
                     Name = "Administrator",
                     Description = "System administrator. Manages global settings for the loyalty platform"

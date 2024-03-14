@@ -24,14 +24,14 @@ namespace Ribbons.Loyalty.Data.Databases
                 .SetupUserModel()
                 .HasData(new UserType
                 {
-                    UserTypeId = LoyaltyUserTypeId.PartnerAdmin,
+                    UserTypeId = LoyaltyUser.PartnerAdmin.ConvertTo<int>(),
                     Code = "partner_admin",
                     Name = "Partner Administrator",
                     Description = "Partner administrator. Manages settings for the partner"
                 })
                 .HasData(new UserType
                 {
-                    UserTypeId = LoyaltyUserTypeId.Member,
+                    UserTypeId = LoyaltyUser.Member.ConvertTo<int>(),
                     Code = "member",
                     Name = "Member",
                     Description = "Members who signed up for this partners' loyalty programs"

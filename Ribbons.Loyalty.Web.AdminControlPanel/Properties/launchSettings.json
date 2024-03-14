@@ -27,14 +27,17 @@
     },
     "Container (Dockerfile)": {
       "commandName": "Docker",
-      "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "AdminDb__Provider": "mssql",
+        "AdminDb__ConnectionString": "server=host.docker.internal;database=loyalty_admin;user id=sa;password=ASD123!@#;trustservercertificate=true"
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": true,
+      "httpPort": 5001,
+      "sslPort": 5002
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",

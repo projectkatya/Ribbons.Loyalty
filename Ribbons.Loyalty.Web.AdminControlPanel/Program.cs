@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Ribbons.Loyalty.Services.Setup;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace Ribbons.Loyalty.Web.AdminControlPanel
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            await builder.SetupAdminControlPanelAsync();
+            builder.SetupAdminControlPanelAsync();
 
             var app = builder.Build();
 
@@ -36,7 +35,9 @@ namespace Ribbons.Loyalty.Web.AdminControlPanel
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            app.Run();
+            await app.InitializeAsync();
+
+            await app.RunAsync();
         }
     }
 }
