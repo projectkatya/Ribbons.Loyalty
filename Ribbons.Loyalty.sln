@@ -20,7 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Loyalty.Services", "Ribbons.Loyalty.Services\Ribbons.Loyalty.Services.csproj", "{D8A2C1E2-A2B5-49A7-8BBF-FCAB41D064F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.Web.AdminControlPanel", "Ribbons.Loyalty.Web.AdminControlPanel\Ribbons.Loyalty.Web.AdminControlPanel.csproj", "{E6BC752B-3485-4BEB-9624-A69E322499A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ribbons.Loyalty.Web.AdminControlPanel", "Ribbons.Loyalty.Web.AdminControlPanel\Ribbons.Loyalty.Web.AdminControlPanel.csproj", "{E6BC752B-3485-4BEB-9624-A69E322499A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.Web", "Ribbons.Loyalty.Web\Ribbons.Loyalty.Web.csproj", "{65093B3E-CB03-43ED-B228-39C0E25EB189}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ribbons.Loyalty.TestConsole", "Ribbons.Loyalty.TestConsole\Ribbons.Loyalty.TestConsole.csproj", "{142CC70F-913E-475B-A294-E1347162A001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +56,14 @@ Global
 		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6BC752B-3485-4BEB-9624-A69E322499A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65093B3E-CB03-43ED-B228-39C0E25EB189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65093B3E-CB03-43ED-B228-39C0E25EB189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65093B3E-CB03-43ED-B228-39C0E25EB189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65093B3E-CB03-43ED-B228-39C0E25EB189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{142CC70F-913E-475B-A294-E1347162A001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{142CC70F-913E-475B-A294-E1347162A001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{142CC70F-913E-475B-A294-E1347162A001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{142CC70F-913E-475B-A294-E1347162A001}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

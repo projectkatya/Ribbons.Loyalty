@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-using Ribbons.Loyalty.Services.Setup;
+using Ribbons.Loyalty.Web.Setup;
 using System.Threading.Tasks;
 
 namespace Ribbons.Loyalty.Web.AdminControlPanel
@@ -11,7 +11,7 @@ namespace Ribbons.Loyalty.Web.AdminControlPanel
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.SetupAdminControlPanelAsync();
+            builder.SetupControlPanel();
 
             var app = builder.Build();
 
@@ -33,7 +33,7 @@ namespace Ribbons.Loyalty.Web.AdminControlPanel
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             await app.InitializeAsync();
 

@@ -4,22 +4,28 @@ using Ribbons.Data;
 using Ribbons.Loyalty.Data.Databases;
 using Ribbons.Loyalty.Data.Definitions;
 using Ribbons.Loyalty.Services.Users;
+using Ribbons.Users.Authentication;
 using Ribbons.Users.Management;
 using Ribbons.Users.Management.Models;
-using System;
-using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Ribbons.Loyalty.Services.Setup
+namespace Ribbons.Loyalty.Web.Setup
 {
     public static class SetupExtensions
     {
-        public static void  SetupAdminControlPanelAsync(this WebApplicationBuilder builder)
+        public static void SetupControlPanel(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+            });
             builder.Services.Configure<AdminDbConfig>(builder.Configuration.GetSection(nameof(AdminDb)));
             builder.Services.AddSingleton<IDatabaseManager<AdminDb>, AdminDbManager>();
             builder.Services.AddSingleton<IDatabaseManager<PartnerDb>, PartnerDbManager>();
             builder.Services.AddSingleton<IUserManager<LoyaltyUser>, UserManager>();
+            builder.Services.AddSingleton<IUserAuthenticator<LoyaltyUser>, UserAuthenticator>();
         }
 
         public static async Task InitializeAsync(this WebApplication app)

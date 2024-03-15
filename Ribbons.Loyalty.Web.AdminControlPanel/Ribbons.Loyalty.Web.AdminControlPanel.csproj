@@ -11,11 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ribbons.Loyalty.Services\Ribbons.Loyalty.Services.csproj" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <ProjectReference Include="..\Ribbons.Loyalty.Web\Ribbons.Loyalty.Web.csproj" />
   </ItemGroup>
 
 </Project>
