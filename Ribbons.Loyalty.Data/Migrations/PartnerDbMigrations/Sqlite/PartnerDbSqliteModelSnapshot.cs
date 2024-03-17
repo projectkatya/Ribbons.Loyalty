@@ -44,6 +44,11 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("billing_address");
 
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("business_name");
+
                     b.Property<string>("City")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT")
@@ -58,9 +63,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("created_date");
 
-                    b.Property<int>("DbServerId")
+                    b.Property<DateTime?>("DeployedDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("deployed_date");
+
+                    b.Property<bool>("IsDeployed")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("db_server_id");
+                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT")
@@ -100,7 +109,9 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DbServerId");
+                    b.HasIndex("DeployedDate");
+
+                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 

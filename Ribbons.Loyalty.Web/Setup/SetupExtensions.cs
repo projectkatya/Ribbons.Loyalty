@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Ribbons.Data;
 using Ribbons.Loyalty.Data.Databases;
 using Ribbons.Loyalty.Data.Definitions;
+using Ribbons.Loyalty.Services.Partners;
+using Ribbons.Loyalty.Services.Partners.Models;
 using Ribbons.Loyalty.Services.Users;
 using Ribbons.Users.Management.Models;
 using System.Text.Json;
@@ -19,11 +21,15 @@ namespace Ribbons.Loyalty.Web.Setup
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
             });
+
+            builder.Services.AddMemoryCache();
+
             builder.Services.Configure<AdminDbConfig>(builder.Configuration.GetSection(nameof(AdminDb)));
             builder.Services.AddSingleton<IDatabaseManager<AdminDb>, AdminDbManager>();
             builder.Services.AddSingleton<IDatabaseManager<PartnerDb>, PartnerDbManager>();
             builder.Services.AddSingleton<IUserManager, UserManager>();
             builder.Services.AddSingleton<IUserAuthenticator, UserAuthenticator>();
+            builder.Services.AddSingleton<IPartnerManager, PartnerManager>();
         }
 
         public static async Task InitializeAsync(this WebApplication app)
@@ -32,6 +38,7 @@ namespace Ribbons.Loyalty.Web.Setup
 
             IDatabaseManager<AdminDb> adminDbManager = serviceProvider.GetRequiredService<IDatabaseManager<AdminDb>>();
             IUserManager userManager = serviceProvider.GetRequiredService<IUserManager>();
+            IPartnerManager partnerManager = serviceProvider.GetRequiredService<IPartnerManager>();
 
             await adminDbManager.MigrateAsync();
 
@@ -42,6 +49,19 @@ namespace Ribbons.Loyalty.Web.Setup
                 FirstName = "Loyalty",
                 LastName = "Administrator",
                 Password = "admin"
+            });
+
+            await partnerManager.CreatePartnerAsync(new CreatePartnerRequest
+            {
+                Alias = "examplepartner",
+                Name = "Example Partner",
+                BusinessName = "Example Partner Incorporated",
+                BillingAddress = "123 Apple Street",
+                Country = "MY",
+                State = "MY-14",
+                City = "Kuala Lumpur",
+                ZipCode = "50000",
+                DbServerId = 2
             });
         }
     }

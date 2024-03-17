@@ -12,11 +12,12 @@ namespace Ribbons.Loyalty.Data
     [Index(nameof(AccountNumber), IsUnique = true)]
     [Index(nameof(Alias), IsUnique = true)]
     [Index(nameof(Status))]
+    [Index(nameof(IsDeployed))]
+    [Index(nameof(DeployedDate))]
     [Index(nameof(Country))]
     [Index(nameof(State))]
     [Index(nameof(City))]
     [Index(nameof(ZipCode))]
-    [Index(nameof(DbServerId))]
     public class Partner
     {
         [Column(ColumnNames.PartnerId)]
@@ -50,6 +51,16 @@ namespace Ribbons.Loyalty.Data
         [Required]
         public PartnerStatus Status { get; set; }
 
+        [Column(ColumnNames.IsDeployed)]
+        public bool IsDeployed { get; set; }
+
+        [Column(ColumnNames.DeployedDate)]
+        public DateTime? DeployedDate { get; set; }
+
+        [Column(ColumnNames.BusinessName)]
+        [StringLength(LengthConstraints.BusinessNameLength)]
+        public string BusinessName { get; set; }
+
         [Column(ColumnNames.BillingAddress)]
         [Required]
         public string BillingAddress { get; set; }
@@ -69,9 +80,5 @@ namespace Ribbons.Loyalty.Data
         [Column(ColumnNames.ZipCode)]
         [StringLength(LengthConstraints.ZipCodeLength)]
         public string ZipCode { get; set; }
-
-        [Column(ColumnNames.DbServerId)]
-        [Required]
-        public int DbServerId { get; set; }
     }
 }

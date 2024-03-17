@@ -2,17 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Oracle.EntityFrameworkCore.Metadata;
 using Ribbons.Loyalty.Data.Databases;
 
 #nullable disable
 
-namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
+namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
 {
-    [DbContext(typeof(PartnerDbOracle))]
-    [Migration("20240316143640_Init")]
+    [DbContext(typeof(PartnerDbMsSql))]
+    [Migration("20240317140113_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -26,71 +26,80 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                 .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Ribbons.Loyalty.Data.Partner", b =>
                 {
                     b.Property<long>("PartnerId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("partner_id");
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
                         .HasMaxLength(12)
-                        .HasColumnType("NVARCHAR2(12)")
+                        .HasColumnType("nvarchar(12)")
                         .HasColumnName("account_number");
 
                     b.Property<string>("Alias")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("NVARCHAR2(128)")
+                        .HasColumnType("nvarchar(128)")
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
                         .IsRequired()
-                        .HasColumnType("NVARCHAR2(2000)")
+                        .HasColumnType("nvarchar(max)")
                         .HasColumnName("billing_address");
+
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("business_name");
 
                     b.Property<string>("City")
                         .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR2(20)")
+                        .HasColumnType("nvarchar(20)")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .HasMaxLength(2)
-                        .HasColumnType("NVARCHAR2(2)")
+                        .HasColumnType("nvarchar(2)")
                         .HasColumnName("country");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
-                    b.Property<int>("DbServerId")
-                        .HasColumnType("NUMBER(10)")
-                        .HasColumnName("db_server_id");
+                    b.Property<DateTime?>("DeployedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deployed_date");
+
+                    b.Property<bool>("IsDeployed")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("name");
 
                     b.Property<string>("State")
                         .HasMaxLength(5)
-                        .HasColumnType("NVARCHAR2(5)")
+                        .HasColumnType("nvarchar(5)")
                         .HasColumnName("state");
 
                     b.Property<int>("Status")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("status");
 
                     b.Property<string>("ZipCode")
                         .HasMaxLength(10)
-                        .HasColumnType("NVARCHAR2(10)")
+                        .HasColumnType("nvarchar(10)")
                         .HasColumnName("zipcode");
 
                     b.HasKey("PartnerId");
@@ -107,7 +116,9 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DbServerId");
+                    b.HasIndex("DeployedDate");
+
+                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -124,41 +135,41 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                 {
                     b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
-                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"));
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("last_name");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("modified_date");
 
                     b.Property<int>("Status")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("status");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(320)
-                        .HasColumnType("NVARCHAR2(320)")
+                        .HasColumnType("nvarchar(320)")
                         .HasColumnName("username");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("user_type_id");
 
                     b.HasKey("UserId");
@@ -182,33 +193,33 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
             modelBuilder.Entity("Ribbons.Users.UserEmail", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(320)
-                        .HasColumnType("NVARCHAR2(320)")
+                        .HasColumnType("nvarchar(320)")
                         .HasColumnName("email_address");
 
                     b.Property<bool>("IsVerified")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_verified");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("modified_date");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("user_type_id");
 
                     b.Property<DateTime?>("VerifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("verified_date");
 
                     b.HasKey("UserId");
@@ -234,35 +245,35 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
             modelBuilder.Entity("Ribbons.Users.UserPassword", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_expired");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("modified_date");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("password_hash");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("password_salt");
 
                     b.HasKey("UserId");
@@ -281,33 +292,33 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
             modelBuilder.Entity("Ribbons.Users.UserPhone", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<bool>("IsVerified")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_verified");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("NVARCHAR2(50)")
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnName("phone_number");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("user_type_id");
 
                     b.Property<DateTime?>("VerifiedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("verified_date");
 
                     b.HasKey("UserId");
@@ -334,43 +345,43 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                 {
                     b.Property<byte[]>("UserSessionId")
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("user_session_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_expired");
 
                     b.Property<bool>("IsLoggedOut")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_logged_out");
 
                     b.Property<DateTime?>("LogoutDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("logout_date");
 
                     b.Property<byte[]>("SessionSecretHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("session_secret_hash");
 
                     b.Property<byte[]>("SessionSecretSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("session_secret_salt");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.HasKey("UserSessionId");
@@ -394,47 +405,47 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                 {
                     b.Property<byte[]>("UserTokenId")
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("user_token_id");
 
                     b.Property<DateTime?>("ConsumedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("consumed_date");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TIMESTAMP(7)")
+                        .HasColumnType("datetime2")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsConsumed")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_consumed");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("NUMBER(1)")
+                        .HasColumnType("bit")
                         .HasColumnName("is_expired");
 
                     b.Property<byte[]>("TokenSecretHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("token_secret_hash");
 
                     b.Property<byte[]>("TokenSecretSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("RAW(128)")
+                        .HasColumnType("varbinary(128)")
                         .HasColumnName("token_secret_salt");
 
                     b.Property<int>("Type")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("type");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("NUMBER(19)")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.HasKey("UserTokenId");
@@ -459,24 +470,24 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
             modelBuilder.Entity("Ribbons.Users.UserType", b =>
                 {
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("NUMBER(10)")
+                        .HasColumnType("int")
                         .HasColumnName("user_type_id");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("NVARCHAR2(64)")
+                        .HasColumnType("nvarchar(64)")
                         .HasColumnName("code");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("NVARCHAR2(500)")
+                        .HasColumnType("nvarchar(500)")
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("NVARCHAR2(255)")
+                        .HasColumnType("nvarchar(255)")
                         .HasColumnName("name");
 
                     b.HasKey("UserTypeId");

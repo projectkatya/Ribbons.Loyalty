@@ -12,6 +12,9 @@
         public const string AccountNumber = "account_number";
         public const string Alias = "alias";
         public const string Status = "status";
+        public const string IsDeployed = "is_deployed";
+        public const string DeployedDate = "deployed_date";
+        public const string BusinessName = "business_name";
         public const string BillingAddress = "billing_address";
         public const string Country = "country";
         public const string State = "state";

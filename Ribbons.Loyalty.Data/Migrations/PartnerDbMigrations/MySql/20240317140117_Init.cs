@@ -28,12 +28,14 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                     alias = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
+                    is_deployed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    deployed_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    business_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     billing_address = table.Column<string>(type: "longtext", nullable: false),
                     country = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: true),
                     state = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: true),
                     city = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
-                    zipcode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true),
-                    db_server_id = table.Column<int>(type: "int", nullable: false)
+                    zipcode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,9 +250,14 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                 column: "created_date");
 
             migrationBuilder.CreateIndex(
-                name: "IX_t_partner_db_server_id",
+                name: "IX_t_partner_deployed_date",
                 table: "t_partner",
-                column: "db_server_id");
+                column: "deployed_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_is_deployed",
+                table: "t_partner",
+                column: "is_deployed");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",

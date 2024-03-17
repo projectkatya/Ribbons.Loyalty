@@ -45,6 +45,11 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                         .HasColumnType("longtext")
                         .HasColumnName("billing_address");
 
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)")
+                        .HasColumnName("business_name");
+
                     b.Property<string>("City")
                         .HasMaxLength(20)
                         .HasColumnType("varchar(20)")
@@ -59,9 +64,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_date");
 
-                    b.Property<int>("DbServerId")
-                        .HasColumnType("int")
-                        .HasColumnName("db_server_id");
+                    b.Property<DateTime?>("DeployedDate")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("deployed_date");
+
+                    b.Property<bool>("IsDeployed")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime(6)")
@@ -101,7 +110,9 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DbServerId");
+                    b.HasIndex("DeployedDate");
+
+                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 

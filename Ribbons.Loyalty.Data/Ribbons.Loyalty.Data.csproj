@@ -15,8 +15,4 @@
     <ProjectReference Include="..\..\Ribbons\Ribbons.Users\Ribbons.Users.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

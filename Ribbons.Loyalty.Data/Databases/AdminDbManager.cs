@@ -24,7 +24,7 @@ namespace Ribbons.Loyalty.Data.Databases
             return await Task.FromResult(Configuration);
         }
 
-        protected override AdminDb CreateInstance(DatabaseConfig configuration)
+        protected override Database CreateInstance(DatabaseConfig configuration)
         {
             AdminDb instance = configuration.Provider switch
             {

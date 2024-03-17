@@ -101,6 +101,11 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                         .HasColumnType("text")
                         .HasColumnName("billing_address");
 
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("business_name");
+
                     b.Property<string>("City")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
@@ -115,9 +120,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<int>("DbServerId")
-                        .HasColumnType("integer")
-                        .HasColumnName("db_server_id");
+                    b.Property<DateTime?>("DeployedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deployed_date");
+
+                    b.Property<bool>("IsDeployed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("timestamp with time zone")
@@ -157,7 +166,9 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DbServerId");
+                    b.HasIndex("DeployedDate");
+
+                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -168,6 +179,28 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                     b.HasIndex("ZipCode");
 
                     b.ToTable("t_partner");
+                });
+
+            modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDbConfig", b =>
+                {
+                    b.Property<long>("PartnerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_id");
+
+                    b.Property<string>("ConnectionString")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("connection_string");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer")
+                        .HasColumnName("provider");
+
+                    b.HasKey("PartnerId");
+
+                    b.HasIndex("Provider");
+
+                    b.ToTable("t_partner_db_config");
                 });
 
             modelBuilder.Entity("Ribbons.Users.User", b =>

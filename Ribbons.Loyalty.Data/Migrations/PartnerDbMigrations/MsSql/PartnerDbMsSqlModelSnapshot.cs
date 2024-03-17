@@ -48,6 +48,11 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("billing_address");
 
+                    b.Property<string>("BusinessName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("business_name");
+
                     b.Property<string>("City")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)")
@@ -62,9 +67,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                         .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
-                    b.Property<int>("DbServerId")
-                        .HasColumnType("int")
-                        .HasColumnName("db_server_id");
+                    b.Property<DateTime?>("DeployedDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("deployed_date");
+
+                    b.Property<bool>("IsDeployed")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2")
@@ -104,7 +113,9 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DbServerId");
+                    b.HasIndex("DeployedDate");
+
+                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
