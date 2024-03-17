@@ -15,6 +15,7 @@ namespace Ribbons.Loyalty.Data.Databases
         public DbSet<UserSession> UserSessions { get; set; }
         public DbSet<UserToken> UserTokens { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<Partner> Partners { get; set; }
 
         protected PartnerDb(DatabaseProvider provider) : base(provider) { }
 
@@ -35,7 +36,8 @@ namespace Ribbons.Loyalty.Data.Databases
                     Code = "member",
                     Name = "Member",
                     Description = "Members who signed up for this partners' loyalty programs"
-                });
+                })
+                .ValueGeneratedNever<Partner, long>(x => x.PartnerId);
         }
     }
 }

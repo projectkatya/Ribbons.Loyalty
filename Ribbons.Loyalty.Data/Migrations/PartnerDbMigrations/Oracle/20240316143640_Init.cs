@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -12,13 +14,36 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "t_partner",
+                columns: table => new
+                {
+                    partner_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    account_number = table.Column<string>(type: "NVARCHAR2(12)", maxLength: 12, nullable: false),
+                    alias = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false),
+                    name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: false),
+                    status = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    billing_address = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
+                    country = table.Column<string>(type: "NVARCHAR2(2)", maxLength: 2, nullable: true),
+                    state = table.Column<string>(type: "NVARCHAR2(5)", maxLength: 5, nullable: true),
+                    city = table.Column<string>(type: "NVARCHAR2(20)", maxLength: 20, nullable: true),
+                    zipcode = table.Column<string>(type: "NVARCHAR2(10)", maxLength: 10, nullable: true),
+                    db_server_id = table.Column<int>(type: "NUMBER(10)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_partner", x => x.partner_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_user_type",
                 columns: table => new
                 {
-                    user_type_id = table.Column<int>(type: "int", nullable: false),
-                    code = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    code = table.Column<string>(type: "NVARCHAR2(64)", maxLength: 64, nullable: false),
+                    name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "NVARCHAR2(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,15 +54,15 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    user_type_id = table.Column<int>(type: "int", nullable: false),
-                    status = table.Column<int>(type: "int", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    username = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    first_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    last_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false)
+                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
+                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    status = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    username = table.Column<string>(type: "NVARCHAR2(320)", maxLength: 320, nullable: false),
+                    first_name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: true),
+                    last_name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,13 +78,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user_email",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_type_id = table.Column<int>(type: "int", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    email_address = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    is_verified = table.Column<bool>(type: "bit", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    email_address = table.Column<string>(type: "NVARCHAR2(320)", maxLength: 320, nullable: false),
+                    is_verified = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,13 +105,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user_password",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    password_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    password_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    is_expired = table.Column<bool>(type: "bit", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    password_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    password_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -102,13 +127,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user_phone",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_type_id = table.Column<int>(type: "int", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    phone_number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    is_verified = table.Column<bool>(type: "bit", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    phone_number = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
+                    is_verified = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -129,15 +154,15 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user_session",
                 columns: table => new
                 {
-                    user_session_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    is_expired = table.Column<bool>(type: "bit", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    session_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    session_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    is_logged_out = table.Column<bool>(type: "bit", nullable: false),
-                    logout_date = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    user_session_id = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    session_secret_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    session_secret_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    is_logged_out = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    logout_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,16 +178,16 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "t_user_token",
                 columns: table => new
                 {
-                    user_token_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    type = table.Column<int>(type: "int", nullable: false),
-                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    is_expired = table.Column<bool>(type: "bit", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    token_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    token_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
-                    is_consumed = table.Column<bool>(type: "bit", nullable: false),
-                    consumed_date = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    user_token_id = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
+                    type = table.Column<int>(type: "NUMBER(10)", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    token_secret_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    token_secret_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
+                    is_consumed = table.Column<bool>(type: "NUMBER(1)", nullable: false),
+                    consumed_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -177,7 +202,63 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
             migrationBuilder.InsertData(
                 table: "t_user_type",
                 columns: new[] { "user_type_id", "code", "description", "name" },
-                values: new object[] { 1, "admin", "System administrator. Manages global settings for the loyalty platform", "Administrator" });
+                values: new object[,]
+                {
+                    { 2, "partner_admin", "Partner administrator. Manages settings for the partner", "Partner Administrator" },
+                    { 3, "member", "Members who signed up for this partners' loyalty programs", "Member" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_account_number",
+                table: "t_partner",
+                column: "account_number",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_alias",
+                table: "t_partner",
+                column: "alias",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_city",
+                table: "t_partner",
+                column: "city");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_country",
+                table: "t_partner",
+                column: "country");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_created_date",
+                table: "t_partner",
+                column: "created_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_db_server_id",
+                table: "t_partner",
+                column: "db_server_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_modified_date",
+                table: "t_partner",
+                column: "modified_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_state",
+                table: "t_partner",
+                column: "state");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_status",
+                table: "t_partner",
+                column: "status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_zipcode",
+                table: "t_partner",
+                column: "zipcode");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_user_created_date",
@@ -377,6 +458,9 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "t_partner");
+
             migrationBuilder.DropTable(
                 name: "t_user_email");
 

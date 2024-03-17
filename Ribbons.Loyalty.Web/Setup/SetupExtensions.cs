@@ -4,8 +4,6 @@ using Ribbons.Data;
 using Ribbons.Loyalty.Data.Databases;
 using Ribbons.Loyalty.Data.Definitions;
 using Ribbons.Loyalty.Services.Users;
-using Ribbons.Users.Authentication;
-using Ribbons.Users.Management;
 using Ribbons.Users.Management.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -24,8 +22,8 @@ namespace Ribbons.Loyalty.Web.Setup
             builder.Services.Configure<AdminDbConfig>(builder.Configuration.GetSection(nameof(AdminDb)));
             builder.Services.AddSingleton<IDatabaseManager<AdminDb>, AdminDbManager>();
             builder.Services.AddSingleton<IDatabaseManager<PartnerDb>, PartnerDbManager>();
-            builder.Services.AddSingleton<IUserManager<LoyaltyUser>, UserManager>();
-            builder.Services.AddSingleton<IUserAuthenticator<LoyaltyUser>, UserAuthenticator>();
+            builder.Services.AddSingleton<IUserManager, UserManager>();
+            builder.Services.AddSingleton<IUserAuthenticator, UserAuthenticator>();
         }
 
         public static async Task InitializeAsync(this WebApplication app)
@@ -33,7 +31,7 @@ namespace Ribbons.Loyalty.Web.Setup
             IServiceProvider serviceProvider = app.Services;
 
             IDatabaseManager<AdminDb> adminDbManager = serviceProvider.GetRequiredService<IDatabaseManager<AdminDb>>();
-            IUserManager<LoyaltyUser> userManager = serviceProvider.GetRequiredService<IUserManager<LoyaltyUser>>();
+            IUserManager userManager = serviceProvider.GetRequiredService<IUserManager>();
 
             await adminDbManager.MigrateAsync();
 

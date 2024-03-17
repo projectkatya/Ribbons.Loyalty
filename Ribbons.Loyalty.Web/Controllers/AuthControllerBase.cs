@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Ribbons.Loyalty.Data.Definitions;
-using Ribbons.Users.Authentication;
+using Ribbons.Loyalty.Services.Users;
 using Ribbons.Users.Authentication.Models;
 
 namespace Ribbons.Loyalty.Web.Controllers
@@ -9,9 +9,9 @@ namespace Ribbons.Loyalty.Web.Controllers
     public abstract class AuthControllerBase : Controller
     {
         protected LoyaltyUser UserType { get; }
-        protected IUserAuthenticator<LoyaltyUser> UserAuthenticator { get; }
+        protected IUserAuthenticator UserAuthenticator { get; }
 
-        public AuthControllerBase(LoyaltyUser userType, IUserAuthenticator<LoyaltyUser> userAuthenticator)
+        public AuthControllerBase(LoyaltyUser userType, IUserAuthenticator userAuthenticator)
         {
             UserType = userType;
             UserAuthenticator = userAuthenticator;
@@ -36,6 +36,8 @@ namespace Ribbons.Loyalty.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> LogoutAsync()
         {
+            await UserAuthenticator.LogoutAsync(UserType, Request, Response);
+
             return View();
         }
 

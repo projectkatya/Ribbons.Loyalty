@@ -7,7 +7,7 @@ using Ribbons.Users.Authentication.Models;
 
 namespace Ribbons.Loyalty.Services.Users
 {
-    public sealed class UserAuthenticator : UserAuthenticator<LoyaltyUser>
+    public sealed class UserAuthenticator : UserAuthenticator<LoyaltyUser>, IUserAuthenticator
     {
         public UserAuthenticator(ILogger<UserAuthenticator> logger, IDatabaseManager<AdminDb> adminDbManager, IDatabaseManager<PartnerDb> partnerDbManager) : base(logger)
         {

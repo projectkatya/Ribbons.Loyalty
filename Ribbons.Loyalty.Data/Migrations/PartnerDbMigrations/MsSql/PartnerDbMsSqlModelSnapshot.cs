@@ -8,10 +8,10 @@ using Ribbons.Loyalty.Data.Databases;
 
 #nullable disable
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
+namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
 {
-    [DbContext(typeof(AdminDbMsSql))]
-    partial class AdminDbMsSqlModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PartnerDbMsSql))]
+    partial class PartnerDbMsSqlModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -25,64 +25,11 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Ribbons.Loyalty.Data.DbServer", b =>
-                {
-                    b.Property<long>("DbServerId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("db_server_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DbServerId"));
-
-                    b.Property<string>("ConnectionString")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("connection_string");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("name");
-
-                    b.Property<int>("Provider")
-                        .HasColumnType("int")
-                        .HasColumnName("provider");
-
-                    b.HasKey("DbServerId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("Provider");
-
-                    b.ToTable("t_db_server");
-
-                    b.HasData(
-                        new
-                        {
-                            DbServerId = 1L,
-                            ConnectionString = "server=localhost;user id=sa;password=ASD123!@#;trustservercertificate=true",
-                            Name = "localhost",
-                            Provider = 1
-                        },
-                        new
-                        {
-                            DbServerId = 2L,
-                            ConnectionString = "server=host.docker.internal;user id=sa;password=ASD123!@#;trustservercertificate=true",
-                            Name = "host.docker.internal",
-                            Provider = 1
-                        });
-                });
-
             modelBuilder.Entity("Ribbons.Loyalty.Data.Partner", b =>
                 {
                     b.Property<long>("PartnerId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("partner_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PartnerId"));
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
@@ -539,10 +486,17 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                     b.HasData(
                         new
                         {
-                            UserTypeId = 1,
-                            Code = "admin",
-                            Description = "System administrator. Manages global settings for the loyalty platform",
-                            Name = "Administrator"
+                            UserTypeId = 2,
+                            Code = "partner_admin",
+                            Description = "Partner administrator. Manages settings for the partner",
+                            Name = "Partner Administrator"
+                        },
+                        new
+                        {
+                            UserTypeId = 3,
+                            Code = "member",
+                            Description = "Members who signed up for this partners' loyalty programs",
+                            Name = "Member"
                         });
                 });
 

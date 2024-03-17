@@ -6,7 +6,7 @@ using Ribbons.Users.Management;
 
 namespace Ribbons.Loyalty.Services.Users
 {
-    public sealed class UserManager : UserManager<LoyaltyUser>
+    public sealed class UserManager : UserManager<LoyaltyUser>, IUserManager
     {
         public UserManager(ILogger<UserManager> logger, IDatabaseManager<AdminDb> adminDbManager, IDatabaseManager<PartnerDb> partnerDbManager) : base(logger)
         {

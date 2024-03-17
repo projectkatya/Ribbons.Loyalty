@@ -8,8 +8,4 @@
     <ProjectReference Include="..\Ribbons.Loyalty.Data\Ribbons.Loyalty.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Partners\Models\" />
-  </ItemGroup>
-
 </Project>
