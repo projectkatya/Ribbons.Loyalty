@@ -41,7 +41,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("longtext")
                         .HasColumnName("billing_address");
 
@@ -63,14 +62,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime(6)")
@@ -109,10 +100,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                     b.HasIndex("Country");
 
                     b.HasIndex("CreatedDate");
-
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -244,7 +231,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MySql
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("expiry_date");
 

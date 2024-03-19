@@ -40,7 +40,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("billing_address");
 
@@ -62,14 +61,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT")
@@ -108,10 +99,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                     b.HasIndex("Country");
 
                     b.HasIndex("CreatedDate");
-
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -243,7 +230,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("expiry_date");
 

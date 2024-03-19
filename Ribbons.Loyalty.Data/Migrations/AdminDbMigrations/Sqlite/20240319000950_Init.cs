@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
+namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -14,20 +14,34 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "t_db_server",
+                columns: table => new
+                {
+                    db_server_id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    provider = table.Column<int>(type: "INTEGER", nullable: false),
+                    connection_string = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_db_server", x => x.db_server_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_partner",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    partner_id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     account_number = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
                     alias = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
                     name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     status = table.Column<int>(type: "INTEGER", nullable: false),
-                    is_deployed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    deployed_date = table.Column<DateTime>(type: "TEXT", nullable: true),
                     business_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    billing_address = table.Column<string>(type: "TEXT", nullable: false),
+                    billing_address = table.Column<string>(type: "TEXT", nullable: true),
                     country = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
                     state = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true),
                     city = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
@@ -36,6 +50,38 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_partner", x => x.partner_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "t_partner_db_config",
+                columns: table => new
+                {
+                    partner_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    provider = table.Column<int>(type: "INTEGER", nullable: false),
+                    connection_string = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_partner_db_config", x => x.partner_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "t_partner_deployment",
+                columns: table => new
+                {
+                    partner_deployment_id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    partner_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    status = table.Column<int>(type: "INTEGER", nullable: false),
+                    start_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    db_migration_start_date = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    db_migration_finish_date = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    db_migration_status = table.Column<int>(type: "INTEGER", nullable: true),
+                    finish_date = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_partner_deployment", x => x.partner_deployment_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -113,7 +159,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                     password_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
                     password_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
                     is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,13 +248,29 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                 });
 
             migrationBuilder.InsertData(
-                table: "t_user_type",
-                columns: new[] { "user_type_id", "code", "description", "name" },
+                table: "t_db_server",
+                columns: new[] { "db_server_id", "connection_string", "name", "provider" },
                 values: new object[,]
                 {
-                    { 2, "partner_admin", "Partner administrator. Manages settings for the partner", "Partner Administrator" },
-                    { 3, "member", "Members who signed up for this partners' loyalty programs", "Member" }
+                    { 1L, "server=localhost;user id=sa;password=ASD123!@#;trustservercertificate=true", "localhost", 1 },
+                    { 2L, "server=host.docker.internal;user id=sa;password=ASD123!@#;trustservercertificate=true", "host.docker.internal", 1 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "t_user_type",
+                columns: new[] { "user_type_id", "code", "description", "name" },
+                values: new object[] { 1, "admin", "System administrator. Manages global settings for the loyalty platform", "Administrator" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_db_server_name",
+                table: "t_db_server",
+                column: "name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_db_server_provider",
+                table: "t_db_server",
+                column: "provider");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_partner_account_number",
@@ -238,16 +300,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                 column: "created_date");
 
             migrationBuilder.CreateIndex(
-                name: "IX_t_partner_deployed_date",
-                table: "t_partner",
-                column: "deployed_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_is_deployed",
-                table: "t_partner",
-                column: "is_deployed");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",
                 table: "t_partner",
                 column: "modified_date");
@@ -266,6 +318,46 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
                 name: "IX_t_partner_zipcode",
                 table: "t_partner",
                 column: "zipcode");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_db_config_provider",
+                table: "t_partner_db_config",
+                column: "provider");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_finish_date",
+                table: "t_partner_deployment",
+                column: "db_migration_finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_start_date",
+                table: "t_partner_deployment",
+                column: "db_migration_start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_status",
+                table: "t_partner_deployment",
+                column: "db_migration_status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_finish_date",
+                table: "t_partner_deployment",
+                column: "finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_partner_id",
+                table: "t_partner_deployment",
+                column: "partner_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_start_date",
+                table: "t_partner_deployment",
+                column: "start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_status",
+                table: "t_partner_deployment",
+                column: "status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_user_created_date",
@@ -466,7 +558,16 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "t_db_server");
+
+            migrationBuilder.DropTable(
                 name: "t_partner");
+
+            migrationBuilder.DropTable(
+                name: "t_partner_db_config");
+
+            migrationBuilder.DropTable(
+                name: "t_partner_deployment");
 
             migrationBuilder.DropTable(
                 name: "t_user_email");

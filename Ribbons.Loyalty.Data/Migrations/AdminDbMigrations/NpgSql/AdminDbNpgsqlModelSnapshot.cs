@@ -97,7 +97,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("billing_address");
 
@@ -119,14 +118,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("timestamp with time zone")
@@ -166,10 +157,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
-
                     b.HasIndex("ModifiedDate");
 
                     b.HasIndex("State");
@@ -201,6 +188,62 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                     b.HasIndex("Provider");
 
                     b.ToTable("t_partner_db_config");
+                });
+
+            modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDeployment", b =>
+                {
+                    b.Property<long>("PartnerDeploymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_deployment_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PartnerDeploymentId"));
+
+                    b.Property<DateTime?>("DbMigrationFinishDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("db_migration_finish_date");
+
+                    b.Property<DateTime?>("DbMigrationStartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("db_migration_start_date");
+
+                    b.Property<int?>("DbMigrationStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("db_migration_status");
+
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("finish_date");
+
+                    b.Property<long>("PartnerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_id");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.HasKey("PartnerDeploymentId");
+
+                    b.HasIndex("DbMigrationFinishDate");
+
+                    b.HasIndex("DbMigrationStartDate");
+
+                    b.HasIndex("DbMigrationStatus");
+
+                    b.HasIndex("FinishDate");
+
+                    b.HasIndex("PartnerId");
+
+                    b.HasIndex("StartDate");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("t_partner_deployment");
                 });
 
             modelBuilder.Entity("Ribbons.Users.User", b =>
@@ -324,7 +367,7 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiry_date");
 

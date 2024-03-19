@@ -20,5 +20,11 @@
         public const string State = "state";
         public const string City = "city";
         public const string ZipCode = "zipcode";
+        public const string PartnerDeploymentId = "partner_deployment_id";
+        public const string StartDate = "start_date";
+        public const string DbMigrationStartDate = "db_migration_start_date";
+        public const string DbMigrationFinishDate = "db_migration_finish_date";
+        public const string DbMigrationStatus = "db_migration_status";
+        public const string FinishDate = "finish_date";
     }
 }

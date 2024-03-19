@@ -89,7 +89,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("billing_address");
 
@@ -111,14 +110,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TEXT")
@@ -158,10 +149,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
-
                     b.HasIndex("ModifiedDate");
 
                     b.HasIndex("State");
@@ -193,6 +180,60 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                     b.HasIndex("Provider");
 
                     b.ToTable("t_partner_db_config");
+                });
+
+            modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDeployment", b =>
+                {
+                    b.Property<long>("PartnerDeploymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("partner_deployment_id");
+
+                    b.Property<DateTime?>("DbMigrationFinishDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("db_migration_finish_date");
+
+                    b.Property<DateTime?>("DbMigrationStartDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("db_migration_start_date");
+
+                    b.Property<int?>("DbMigrationStatus")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("db_migration_status");
+
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("finish_date");
+
+                    b.Property<long>("PartnerId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("partner_id");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("start_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("status");
+
+                    b.HasKey("PartnerDeploymentId");
+
+                    b.HasIndex("DbMigrationFinishDate");
+
+                    b.HasIndex("DbMigrationStartDate");
+
+                    b.HasIndex("DbMigrationStatus");
+
+                    b.HasIndex("FinishDate");
+
+                    b.HasIndex("PartnerId");
+
+                    b.HasIndex("StartDate");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("t_partner_deployment");
                 });
 
             modelBuilder.Entity("Ribbons.Users.User", b =>
@@ -314,7 +355,7 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("TEXT")
                         .HasColumnName("expiry_date");
 

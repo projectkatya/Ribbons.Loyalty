@@ -11,7 +11,12 @@ namespace Ribbons.Loyalty.Services.Partners.Models
 
         public static CreatePartnerResponse Ok() => new(CreatePartnerStatus.Ok);
         
-        public static CreatePartnerResponse InvalidRequest(Dictionary<string, string> validationErrors) => new(CreatePartnerStatus.InvalidRequest)
+        public static CreatePartnerResponse PartnerInvalid(Dictionary<string, string> validationErrors) => new(CreatePartnerStatus.PartnerInvalid)
+        {
+            ValidationErrors = validationErrors
+        };
+
+        public static CreatePartnerResponse RootUserInvalid(Dictionary<string, string> validationErrors) => new(CreatePartnerStatus.RootUserInvalid)
         {
             ValidationErrors = validationErrors
         };

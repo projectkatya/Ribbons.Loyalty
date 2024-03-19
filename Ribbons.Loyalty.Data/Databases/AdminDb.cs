@@ -18,6 +18,7 @@ namespace Ribbons.Loyalty.Data.Databases
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Partner> Partners { get; set; }
         public DbSet<PartnerDbConfig> PartnerDbConfigs { get; set; }
+        public DbSet<PartnerDeployment> PartnerDeployments { get; set; }
 
         protected AdminDb(DatabaseProvider provider) : base(provider) { }
 

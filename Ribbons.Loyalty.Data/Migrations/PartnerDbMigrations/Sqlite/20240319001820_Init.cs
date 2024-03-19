@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
+namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Sqlite
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -18,21 +17,19 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_partner",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "bigint", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    account_number = table.Column<string>(type: "character varying(12)", maxLength: 12, nullable: false),
-                    alias = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    is_deployed = table.Column<bool>(type: "boolean", nullable: false),
-                    deployed_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    business_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    billing_address = table.Column<string>(type: "text", nullable: false),
-                    country = table.Column<string>(type: "character varying(2)", maxLength: 2, nullable: true),
-                    state = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
-                    city = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    zipcode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true)
+                    partner_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    account_number = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
+                    alias = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
+                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    status = table.Column<int>(type: "INTEGER", nullable: false),
+                    business_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
+                    billing_address = table.Column<string>(type: "TEXT", nullable: true),
+                    country = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
+                    state = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true),
+                    city = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
+                    zipcode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,10 +40,10 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_type",
                 columns: table => new
                 {
-                    user_type_id = table.Column<int>(type: "integer", nullable: false),
-                    code = table.Column<string>(type: "character varying(64)", maxLength: 64, nullable: false),
-                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
+                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    code = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
+                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,15 +54,15 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_type_id = table.Column<int>(type: "integer", nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    username = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
-                    first_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    last_name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    status = table.Column<int>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    username = table.Column<string>(type: "TEXT", maxLength: 320, nullable: false),
+                    first_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
+                    last_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,13 +78,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_email",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_type_id = table.Column<int>(type: "integer", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    email_address = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
-                    is_verified = table.Column<bool>(type: "boolean", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    email_address = table.Column<string>(type: "TEXT", maxLength: 320, nullable: false),
+                    is_verified = table.Column<bool>(type: "INTEGER", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,13 +105,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_password",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    password_salt = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    password_hash = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    is_expired = table.Column<bool>(type: "boolean", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    password_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    password_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,13 +127,13 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_phone",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_type_id = table.Column<int>(type: "integer", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    phone_number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    is_verified = table.Column<bool>(type: "boolean", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    phone_number = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    is_verified = table.Column<bool>(type: "INTEGER", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -157,15 +154,15 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_session",
                 columns: table => new
                 {
-                    user_session_id = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    is_expired = table.Column<bool>(type: "boolean", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    session_secret_salt = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    session_secret_hash = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    is_logged_out = table.Column<bool>(type: "boolean", nullable: false),
-                    logout_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    user_session_id = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    session_secret_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    session_secret_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    is_logged_out = table.Column<bool>(type: "INTEGER", nullable: false),
+                    logout_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -181,16 +178,16 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "t_user_token",
                 columns: table => new
                 {
-                    user_token_id = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    is_expired = table.Column<bool>(type: "boolean", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    token_secret_salt = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    token_secret_hash = table.Column<byte[]>(type: "bytea", maxLength: 128, nullable: false),
-                    is_consumed = table.Column<bool>(type: "boolean", nullable: false),
-                    consumed_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    user_token_id = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
+                    type = table.Column<int>(type: "INTEGER", nullable: false),
+                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    token_secret_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    token_secret_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
+                    is_consumed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    consumed_date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -237,16 +234,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                 name: "IX_t_partner_created_date",
                 table: "t_partner",
                 column: "created_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_deployed_date",
-                table: "t_partner",
-                column: "deployed_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_is_deployed",
-                table: "t_partner",
-                column: "is_deployed");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",

@@ -3,7 +3,8 @@
     public enum CreatePartnerStatus
     {
         Ok,
-        InvalidRequest,
+        PartnerInvalid,
+        RootUserInvalid,
         DbServerNotFound,
         AccountNumberTaken,
         AliasTaken,

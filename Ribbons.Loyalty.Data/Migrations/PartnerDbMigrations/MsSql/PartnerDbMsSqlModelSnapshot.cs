@@ -44,7 +44,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("billing_address");
 
@@ -66,14 +65,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2")
@@ -112,10 +103,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                     b.HasIndex("Country");
 
                     b.HasIndex("CreatedDate");
-
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -249,7 +236,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
                         .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("expiry_date");
 

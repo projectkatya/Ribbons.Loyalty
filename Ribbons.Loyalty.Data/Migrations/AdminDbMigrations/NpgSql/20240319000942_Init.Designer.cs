@@ -4,14 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Ribbons.Loyalty.Data.Databases;
 
 #nullable disable
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
+namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.NpgSql
 {
-    [DbContext(typeof(AdminDbSqlite))]
-    [Migration("20240317140051_Init")]
+    [DbContext(typeof(AdminDbNpgsql))]
+    [Migration("20240319000942_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -22,28 +23,33 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true);
+                .HasAnnotation("Proxies:LazyLoading", true)
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Ribbons.Loyalty.Data.DbServer", b =>
                 {
                     b.Property<long>("DbServerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("db_server_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("DbServerId"));
 
                     b.Property<string>("ConnectionString")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("connection_string");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.Property<int>("Provider")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("provider");
 
                     b.HasKey("DbServerId");
@@ -76,75 +82,68 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 {
                     b.Property<long>("PartnerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("partner_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PartnerId"));
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
                         .HasMaxLength(12)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(12)")
                         .HasColumnName("account_number");
 
                     b.Property<string>("Alias")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(128)")
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("billing_address");
 
                     b.Property<string>("BusinessName")
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("business_name");
 
                     b.Property<string>("City")
                         .HasMaxLength(20)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .HasMaxLength(2)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(2)")
                         .HasColumnName("country");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("is_deployed");
-
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.Property<string>("State")
                         .HasMaxLength(5)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(5)")
                         .HasColumnName("state");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("ZipCode")
                         .HasMaxLength(10)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(10)")
                         .HasColumnName("zipcode");
 
                     b.HasKey("PartnerId");
@@ -161,10 +160,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
-
                     b.HasIndex("ModifiedDate");
 
                     b.HasIndex("State");
@@ -179,16 +174,16 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
             modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDbConfig", b =>
                 {
                     b.Property<long>("PartnerId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("partner_id");
 
                     b.Property<string>("ConnectionString")
                         .IsRequired()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("text")
                         .HasColumnName("connection_string");
 
                     b.Property<int>("Provider")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("provider");
 
                     b.HasKey("PartnerId");
@@ -198,43 +193,101 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                     b.ToTable("t_partner_db_config");
                 });
 
+            modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDeployment", b =>
+                {
+                    b.Property<long>("PartnerDeploymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_deployment_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("PartnerDeploymentId"));
+
+                    b.Property<DateTime?>("DbMigrationFinishDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("db_migration_finish_date");
+
+                    b.Property<DateTime?>("DbMigrationStartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("db_migration_start_date");
+
+                    b.Property<int?>("DbMigrationStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("db_migration_status");
+
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("finish_date");
+
+                    b.Property<long>("PartnerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_id");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.HasKey("PartnerDeploymentId");
+
+                    b.HasIndex("DbMigrationFinishDate");
+
+                    b.HasIndex("DbMigrationStartDate");
+
+                    b.HasIndex("DbMigrationStatus");
+
+                    b.HasIndex("FinishDate");
+
+                    b.HasIndex("PartnerId");
+
+                    b.HasIndex("StartDate");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("t_partner_deployment");
+                });
+
             modelBuilder.Entity("Ribbons.Users.User", b =>
                 {
                     b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
+
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
                     b.Property<string>("FirstName")
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("last_name");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_date");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(320)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(320)")
                         .HasColumnName("username");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("user_type_id");
 
                     b.HasKey("UserId");
@@ -258,33 +311,33 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
             modelBuilder.Entity("Ribbons.Users.UserEmail", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(320)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(320)")
                         .HasColumnName("email_address");
 
                     b.Property<bool>("IsVerified")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_verified");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_date");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("user_type_id");
 
                     b.Property<DateTime?>("VerifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("verified_date");
 
                     b.HasKey("UserId");
@@ -310,35 +363,35 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
             modelBuilder.Entity("Ribbons.Users.UserPassword", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT")
+                    b.Property<DateTime?>("ExpiryDate")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_expired");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_date");
 
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("password_hash");
 
                     b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("password_salt");
 
                     b.HasKey("UserId");
@@ -357,33 +410,33 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
             modelBuilder.Entity("Ribbons.Users.UserPhone", b =>
                 {
                     b.Property<long>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
                     b.Property<bool>("IsVerified")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_verified");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_date");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(50)")
                         .HasColumnName("phone_number");
 
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("user_type_id");
 
                     b.Property<DateTime?>("VerifiedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("verified_date");
 
                     b.HasKey("UserId");
@@ -410,43 +463,43 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 {
                     b.Property<byte[]>("UserSessionId")
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("user_session_id");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_expired");
 
                     b.Property<bool>("IsLoggedOut")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_logged_out");
 
                     b.Property<DateTime?>("LogoutDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("logout_date");
 
                     b.Property<byte[]>("SessionSecretHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("session_secret_hash");
 
                     b.Property<byte[]>("SessionSecretSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("session_secret_salt");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.HasKey("UserSessionId");
@@ -470,47 +523,47 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 {
                     b.Property<byte[]>("UserTokenId")
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("user_token_id");
 
                     b.Property<DateTime?>("ConsumedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("consumed_date");
 
                     b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
                     b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiry_date");
 
                     b.Property<bool>("IsConsumed")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_consumed");
 
                     b.Property<bool>("IsExpired")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("boolean")
                         .HasColumnName("is_expired");
 
                     b.Property<byte[]>("TokenSecretHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("token_secret_hash");
 
                     b.Property<byte[]>("TokenSecretSalt")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("BLOB")
+                        .HasColumnType("bytea")
                         .HasColumnName("token_secret_salt");
 
                     b.Property<int>("Type")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("type");
 
                     b.Property<long>("UserId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
                     b.HasKey("UserTokenId");
@@ -535,24 +588,24 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
             modelBuilder.Entity("Ribbons.Users.UserType", b =>
                 {
                     b.Property<int>("UserTypeId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("integer")
                         .HasColumnName("user_type_id");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(64)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(64)")
                         .HasColumnName("code");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
                     b.HasKey("UserTypeId");

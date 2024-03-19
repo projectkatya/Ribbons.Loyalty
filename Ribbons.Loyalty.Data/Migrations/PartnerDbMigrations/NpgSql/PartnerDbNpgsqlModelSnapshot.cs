@@ -44,7 +44,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("billing_address");
 
@@ -66,14 +65,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("timestamp with time zone")
@@ -112,10 +103,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                     b.HasIndex("Country");
 
                     b.HasIndex("CreatedDate");
-
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -249,7 +236,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.NpgSql
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiry_date");
 

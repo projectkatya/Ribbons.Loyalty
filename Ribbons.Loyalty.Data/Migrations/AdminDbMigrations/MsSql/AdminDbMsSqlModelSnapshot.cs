@@ -97,7 +97,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("billing_address");
 
@@ -119,14 +118,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("bit")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("datetime2")
@@ -166,10 +157,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
 
                     b.HasIndex("CreatedDate");
 
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
-
                     b.HasIndex("ModifiedDate");
 
                     b.HasIndex("State");
@@ -201,6 +188,62 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                     b.HasIndex("Provider");
 
                     b.ToTable("t_partner_db_config");
+                });
+
+            modelBuilder.Entity("Ribbons.Loyalty.Data.PartnerDeployment", b =>
+                {
+                    b.Property<long>("PartnerDeploymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_deployment_id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("PartnerDeploymentId"));
+
+                    b.Property<DateTime?>("DbMigrationFinishDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("db_migration_finish_date");
+
+                    b.Property<DateTime?>("DbMigrationStartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("db_migration_start_date");
+
+                    b.Property<int?>("DbMigrationStatus")
+                        .HasColumnType("int")
+                        .HasColumnName("db_migration_status");
+
+                    b.Property<DateTime?>("FinishDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("finish_date");
+
+                    b.Property<long>("PartnerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("partner_id");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("start_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int")
+                        .HasColumnName("status");
+
+                    b.HasKey("PartnerDeploymentId");
+
+                    b.HasIndex("DbMigrationFinishDate");
+
+                    b.HasIndex("DbMigrationStartDate");
+
+                    b.HasIndex("DbMigrationStatus");
+
+                    b.HasIndex("FinishDate");
+
+                    b.HasIndex("PartnerId");
+
+                    b.HasIndex("StartDate");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("t_partner_deployment");
                 });
 
             modelBuilder.Entity("Ribbons.Users.User", b =>
@@ -324,7 +367,7 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                         .HasColumnType("datetime2")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2")
                         .HasColumnName("expiry_date");
 

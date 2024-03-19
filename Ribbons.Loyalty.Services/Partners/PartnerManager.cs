@@ -1,9 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Logging;
-using MySql.Data.MySqlClient;
-using Npgsql;
-using Oracle.ManagedDataAccess.Client;
+﻿using Microsoft.Extensions.Logging;
 using Ribbons.Data;
 using Ribbons.Loyalty.Data;
 using Ribbons.Loyalty.Data.Databases;
@@ -12,8 +7,6 @@ using Ribbons.Loyalty.Services.Partners.Models;
 using Ribbons.Loyalty.Services.Users;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace Ribbons.Loyalty.Services.Partners
@@ -45,7 +38,7 @@ namespace Ribbons.Loyalty.Services.Partners
             {
                 if (!createPartnerRequest.TryValidateObject(out Dictionary<string, string> validationErrors))
                 {
-                    return CreatePartnerResponse.InvalidRequest(validationErrors);
+                    return CreatePartnerResponse.PartnerInvalid(validationErrors);
                 }
 
                 Database adminDb = await AdminDbManager.GetDatabaseAsync();
@@ -97,7 +90,7 @@ namespace Ribbons.Loyalty.Services.Partners
 
                 await adminDb.SaveChangesAsync();
 
-                await PartnerDbManager.MigrateAsync(partner.Alias);
+                _ = Task.Run(async () => await DeployPartnerAsync(partner.PartnerId));
 
                 return CreatePartnerResponse.Ok();
             }
@@ -106,6 +99,77 @@ namespace Ribbons.Loyalty.Services.Partners
                 Logger.LogError("{methodName} failed with exception {ex}", nameof(CreatePartnerAsync), ex);
 
                 return CreatePartnerResponse.Error();
+            }
+        }
+
+        public async Task DeployPartnerAsync(long partnerId)
+        {
+            try
+            {
+                Database adminDb = await AdminDbManager.GetDatabaseAsync();
+
+                Partner partner = await adminDb.FindAsync<Partner>(partnerId);
+
+                if (partner == null)
+                {
+                    return;
+                }
+
+                partner.Status = PartnerStatus.Deploying;
+
+                await adminDb.SaveChangesAsync();
+
+                PartnerDeployment partnerDeployment = new()
+                {
+                    PartnerId = partnerId,
+                    Status = PartnerDeploymentStatus.New,
+                    StartDate = DateTime.Now
+                };
+
+                await adminDb.AddAsync(partnerDeployment);
+
+                await adminDb.SaveChangesAsync();
+
+                partnerDeployment.Status = PartnerDeploymentStatus.InProgress;
+                
+                partnerDeployment.DbMigrationStartDate = DateTime.Now;
+
+                await adminDb.SaveChangesAsync();
+
+                MigrationStatus migrationStatus = await PartnerDbManager.MigrateAsync(partner.Alias);
+
+                partnerDeployment.DbMigrationFinishDate = DateTime.Now;
+                
+                partnerDeployment.DbMigrationStatus = migrationStatus;
+
+                partnerDeployment.FinishDate = DateTime.Now;
+
+                await adminDb.SaveChangesAsync();
+
+                if (migrationStatus == MigrationStatus.Complete)
+                {
+                    Database partnerDb = await PartnerDbManager.GetDatabaseAsync(partner.Alias);
+
+                    partner.Status = PartnerStatus.Active;
+
+                    partnerDeployment.Status = PartnerDeploymentStatus.Complete;
+
+                    await partnerDb.AddAsync(partner);
+
+                    await partnerDb.SaveChangesAsync();
+
+                    await adminDb.SaveChangesAsync();
+
+                    return;
+                }
+
+                partnerDeployment.Status = PartnerDeploymentStatus.Incomplete;
+
+                await adminDb.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("{methodName} failed with exception {ex}", nameof(DeployPartnerAsync), ex);
             }
         }
     }

@@ -1,11 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
+namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MySql
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -13,87 +14,112 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "t_db_server",
                 columns: table => new
                 {
-                    db_server_id = table.Column<long>(type: "NUMBER(19)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: false),
-                    provider = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    connection_string = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    db_server_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    provider = table.Column<int>(type: "int", nullable: false),
+                    connection_string = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_db_server", x => x.db_server_id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_partner",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "NUMBER(19)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    account_number = table.Column<string>(type: "NVARCHAR2(12)", maxLength: 12, nullable: false),
-                    alias = table.Column<string>(type: "NVARCHAR2(128)", maxLength: 128, nullable: false),
-                    name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: false),
-                    status = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    is_deployed = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    deployed_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true),
-                    business_name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: true),
-                    billing_address = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false),
-                    country = table.Column<string>(type: "NVARCHAR2(2)", maxLength: 2, nullable: true),
-                    state = table.Column<string>(type: "NVARCHAR2(5)", maxLength: 5, nullable: true),
-                    city = table.Column<string>(type: "NVARCHAR2(20)", maxLength: 20, nullable: true),
-                    zipcode = table.Column<string>(type: "NVARCHAR2(10)", maxLength: 10, nullable: true)
+                    partner_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    account_number = table.Column<string>(type: "varchar(12)", maxLength: 12, nullable: false),
+                    alias = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    business_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
+                    billing_address = table.Column<string>(type: "longtext", nullable: true),
+                    country = table.Column<string>(type: "varchar(2)", maxLength: 2, nullable: true),
+                    state = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: true),
+                    city = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: true),
+                    zipcode = table.Column<string>(type: "varchar(10)", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_partner", x => x.partner_id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_partner_db_config",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    provider = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    connection_string = table.Column<string>(type: "NVARCHAR2(2000)", nullable: false)
+                    partner_id = table.Column<long>(type: "bigint", nullable: false),
+                    provider = table.Column<int>(type: "int", nullable: false),
+                    connection_string = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_partner_db_config", x => x.partner_id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "t_partner_deployment",
+                columns: table => new
+                {
+                    partner_deployment_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    partner_id = table.Column<long>(type: "bigint", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    start_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    db_migration_start_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    db_migration_finish_date = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    db_migration_status = table.Column<int>(type: "int", nullable: true),
+                    finish_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_partner_deployment", x => x.partner_deployment_id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_type",
                 columns: table => new
                 {
-                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    code = table.Column<string>(type: "NVARCHAR2(64)", maxLength: 64, nullable: false),
-                    name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: false),
-                    description = table.Column<string>(type: "NVARCHAR2(500)", maxLength: 500, nullable: true)
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_user_type", x => x.user_type_id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false)
-                        .Annotation("Oracle:Identity", "START WITH 1 INCREMENT BY 1"),
-                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    status = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    username = table.Column<string>(type: "NVARCHAR2(320)", maxLength: 320, nullable: false),
-                    first_name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: true),
-                    last_name = table.Column<string>(type: "NVARCHAR2(255)", maxLength: 255, nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    username = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false),
+                    first_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
+                    last_name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -103,19 +129,20 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_type_id,
                         principalTable: "t_user_type",
                         principalColumn: "user_type_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_email",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    email_address = table.Column<string>(type: "NVARCHAR2(320)", maxLength: 320, nullable: false),
-                    is_verified = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    email_address = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false),
+                    is_verified = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,19 +157,20 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_id,
                         principalTable: "t_user",
                         principalColumn: "user_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_password",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    password_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    password_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    password_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    password_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_expired = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -152,19 +180,20 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_id,
                         principalTable: "t_user",
                         principalColumn: "user_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_phone",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    user_type_id = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    phone_number = table.Column<string>(type: "NVARCHAR2(50)", maxLength: 50, nullable: false),
-                    is_verified = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    phone_number = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    is_verified = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,21 +208,22 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_id,
                         principalTable: "t_user",
                         principalColumn: "user_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_session",
                 columns: table => new
                 {
-                    user_session_id = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    session_secret_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    session_secret_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    is_logged_out = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    logout_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
+                    user_session_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    is_expired = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    session_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    session_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_logged_out = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    logout_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -203,22 +233,23 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_id,
                         principalTable: "t_user",
                         principalColumn: "user_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "t_user_token",
                 columns: table => new
                 {
-                    user_token_id = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "NUMBER(19)", nullable: false),
-                    type = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    is_expired = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    token_secret_salt = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    token_secret_hash = table.Column<byte[]>(type: "RAW(128)", maxLength: 128, nullable: false),
-                    is_consumed = table.Column<bool>(type: "NUMBER(1)", nullable: false),
-                    consumed_date = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: true)
+                    user_token_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    type = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    is_expired = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    token_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    token_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_consumed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    consumed_date = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -228,7 +259,8 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                         column: x => x.user_id,
                         principalTable: "t_user",
                         principalColumn: "user_id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.InsertData(
                 table: "t_db_server",
@@ -283,16 +315,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                 column: "created_date");
 
             migrationBuilder.CreateIndex(
-                name: "IX_t_partner_deployed_date",
-                table: "t_partner",
-                column: "deployed_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_is_deployed",
-                table: "t_partner",
-                column: "is_deployed");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",
                 table: "t_partner",
                 column: "modified_date");
@@ -316,6 +338,41 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
                 name: "IX_t_partner_db_config_provider",
                 table: "t_partner_db_config",
                 column: "provider");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_finish_date",
+                table: "t_partner_deployment",
+                column: "db_migration_finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_start_date",
+                table: "t_partner_deployment",
+                column: "db_migration_start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_status",
+                table: "t_partner_deployment",
+                column: "db_migration_status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_finish_date",
+                table: "t_partner_deployment",
+                column: "finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_partner_id",
+                table: "t_partner_deployment",
+                column: "partner_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_start_date",
+                table: "t_partner_deployment",
+                column: "start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_status",
+                table: "t_partner_deployment",
+                column: "status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_user_created_date",
@@ -523,6 +580,9 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Oracle
 
             migrationBuilder.DropTable(
                 name: "t_partner_db_config");
+
+            migrationBuilder.DropTable(
+                name: "t_partner_deployment");
 
             migrationBuilder.DropTable(
                 name: "t_user_email");

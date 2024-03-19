@@ -6,5 +6,6 @@ namespace Ribbons.Loyalty.Services.Partners
     public interface IPartnerManager
     {
         Task<CreatePartnerResponse> CreatePartnerAsync(CreatePartnerRequest createPartnerRequest);
+        Task DeployPartnerAsync(long partnerId);
     }
 }

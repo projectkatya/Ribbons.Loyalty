@@ -12,8 +12,6 @@ namespace Ribbons.Loyalty.Data
     [Index(nameof(AccountNumber), IsUnique = true)]
     [Index(nameof(Alias), IsUnique = true)]
     [Index(nameof(Status))]
-    [Index(nameof(IsDeployed))]
-    [Index(nameof(DeployedDate))]
     [Index(nameof(Country))]
     [Index(nameof(State))]
     [Index(nameof(City))]
@@ -51,18 +49,11 @@ namespace Ribbons.Loyalty.Data
         [Required]
         public PartnerStatus Status { get; set; }
 
-        [Column(ColumnNames.IsDeployed)]
-        public bool IsDeployed { get; set; }
-
-        [Column(ColumnNames.DeployedDate)]
-        public DateTime? DeployedDate { get; set; }
-
         [Column(ColumnNames.BusinessName)]
         [StringLength(LengthConstraints.BusinessNameLength)]
         public string BusinessName { get; set; }
 
         [Column(ColumnNames.BillingAddress)]
-        [Required]
         public string BillingAddress { get; set; }
 
         [Column(ColumnNames.Country)]

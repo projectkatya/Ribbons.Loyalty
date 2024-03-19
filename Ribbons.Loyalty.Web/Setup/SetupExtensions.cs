@@ -4,7 +4,6 @@ using Ribbons.Data;
 using Ribbons.Loyalty.Data.Databases;
 using Ribbons.Loyalty.Data.Definitions;
 using Ribbons.Loyalty.Services.Partners;
-using Ribbons.Loyalty.Services.Partners.Models;
 using Ribbons.Loyalty.Services.Users;
 using Ribbons.Users.Management.Models;
 using System.Text.Json;
@@ -20,6 +19,8 @@ namespace Ribbons.Loyalty.Web.Setup
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
             builder.Services.AddMemoryCache();
@@ -49,19 +50,6 @@ namespace Ribbons.Loyalty.Web.Setup
                 FirstName = "Loyalty",
                 LastName = "Administrator",
                 Password = "admin"
-            });
-
-            await partnerManager.CreatePartnerAsync(new CreatePartnerRequest
-            {
-                Alias = "examplepartner",
-                Name = "Example Partner",
-                BusinessName = "Example Partner Incorporated",
-                BillingAddress = "123 Apple Street",
-                Country = "MY",
-                State = "MY-14",
-                City = "Kuala Lumpur",
-                ZipCode = "50000",
-                DbServerId = 2
             });
         }
     }

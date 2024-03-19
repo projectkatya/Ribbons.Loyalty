@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
+namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -17,11 +17,11 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_db_server",
                 columns: table => new
                 {
-                    db_server_id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    provider = table.Column<int>(type: "INTEGER", nullable: false),
-                    connection_string = table.Column<string>(type: "TEXT", nullable: false)
+                    db_server_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    provider = table.Column<int>(type: "int", nullable: false),
+                    connection_string = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,22 +32,20 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_partner",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    account_number = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
-                    alias = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    status = table.Column<int>(type: "INTEGER", nullable: false),
-                    is_deployed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    deployed_date = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    business_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    billing_address = table.Column<string>(type: "TEXT", nullable: false),
-                    country = table.Column<string>(type: "TEXT", maxLength: 2, nullable: true),
-                    state = table.Column<string>(type: "TEXT", maxLength: 5, nullable: true),
-                    city = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
-                    zipcode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: true)
+                    partner_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    account_number = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
+                    alias = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    business_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    billing_address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    country = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: true),
+                    state = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    city = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    zipcode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -58,9 +56,9 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_partner_db_config",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    provider = table.Column<int>(type: "INTEGER", nullable: false),
-                    connection_string = table.Column<string>(type: "TEXT", nullable: false)
+                    partner_id = table.Column<long>(type: "bigint", nullable: false),
+                    provider = table.Column<int>(type: "int", nullable: false),
+                    connection_string = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,13 +66,32 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 });
 
             migrationBuilder.CreateTable(
+                name: "t_partner_deployment",
+                columns: table => new
+                {
+                    partner_deployment_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    partner_id = table.Column<long>(type: "bigint", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    start_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    db_migration_start_date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    db_migration_finish_date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    db_migration_status = table.Column<int>(type: "int", nullable: true),
+                    finish_date = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_t_partner_deployment", x => x.partner_deployment_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "t_user_type",
                 columns: table => new
                 {
-                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
-                    code = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
-                    name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true)
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    code = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
+                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -85,15 +102,15 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
-                    status = table.Column<int>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    username = table.Column<string>(type: "TEXT", maxLength: 320, nullable: false),
-                    first_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true),
-                    last_name = table.Column<string>(type: "TEXT", maxLength: 255, nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    username = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
+                    first_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    last_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -109,13 +126,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user_email",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    email_address = table.Column<string>(type: "TEXT", maxLength: 320, nullable: false),
-                    is_verified = table.Column<bool>(type: "INTEGER", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    email_address = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
+                    is_verified = table.Column<bool>(type: "bit", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -136,13 +153,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user_password",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    password_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    password_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    password_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    password_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_expired = table.Column<bool>(type: "bit", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -158,13 +175,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user_phone",
                 columns: table => new
                 {
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    user_type_id = table.Column<int>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    modified_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    phone_number = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    is_verified = table.Column<bool>(type: "INTEGER", nullable: false),
-                    verified_date = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_type_id = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    phone_number = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    is_verified = table.Column<bool>(type: "bit", nullable: false),
+                    verified_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,15 +202,15 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user_session",
                 columns: table => new
                 {
-                    user_session_id = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    session_secret_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    session_secret_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    is_logged_out = table.Column<bool>(type: "INTEGER", nullable: false),
-                    logout_date = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    user_session_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    is_expired = table.Column<bool>(type: "bit", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    session_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    session_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_logged_out = table.Column<bool>(type: "bit", nullable: false),
+                    logout_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -209,16 +226,16 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "t_user_token",
                 columns: table => new
                 {
-                    user_token_id = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    user_id = table.Column<long>(type: "INTEGER", nullable: false),
-                    type = table.Column<int>(type: "INTEGER", nullable: false),
-                    created_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    is_expired = table.Column<bool>(type: "INTEGER", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    token_secret_salt = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    token_secret_hash = table.Column<byte[]>(type: "BLOB", maxLength: 128, nullable: false),
-                    is_consumed = table.Column<bool>(type: "INTEGER", nullable: false),
-                    consumed_date = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    user_token_id = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    type = table.Column<int>(type: "int", nullable: false),
+                    created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    is_expired = table.Column<bool>(type: "bit", nullable: false),
+                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    token_secret_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    token_secret_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    is_consumed = table.Column<bool>(type: "bit", nullable: false),
+                    consumed_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -283,16 +300,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 column: "created_date");
 
             migrationBuilder.CreateIndex(
-                name: "IX_t_partner_deployed_date",
-                table: "t_partner",
-                column: "deployed_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_is_deployed",
-                table: "t_partner",
-                column: "is_deployed");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",
                 table: "t_partner",
                 column: "modified_date");
@@ -316,6 +323,41 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
                 name: "IX_t_partner_db_config_provider",
                 table: "t_partner_db_config",
                 column: "provider");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_finish_date",
+                table: "t_partner_deployment",
+                column: "db_migration_finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_start_date",
+                table: "t_partner_deployment",
+                column: "db_migration_start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_db_migration_status",
+                table: "t_partner_deployment",
+                column: "db_migration_status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_finish_date",
+                table: "t_partner_deployment",
+                column: "finish_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_partner_id",
+                table: "t_partner_deployment",
+                column: "partner_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_start_date",
+                table: "t_partner_deployment",
+                column: "start_date");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_t_partner_deployment_status",
+                table: "t_partner_deployment",
+                column: "status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_user_created_date",
@@ -523,6 +565,9 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.Sqlite
 
             migrationBuilder.DropTable(
                 name: "t_partner_db_config");
+
+            migrationBuilder.DropTable(
+                name: "t_partner_deployment");
 
             migrationBuilder.DropTable(
                 name: "t_user_email");

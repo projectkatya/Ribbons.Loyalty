@@ -44,7 +44,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                         .HasColumnName("alias");
 
                     b.Property<string>("BillingAddress")
-                        .IsRequired()
                         .HasColumnType("NVARCHAR2(2000)")
                         .HasColumnName("billing_address");
 
@@ -66,14 +65,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("created_date");
-
-                    b.Property<DateTime?>("DeployedDate")
-                        .HasColumnType("TIMESTAMP(7)")
-                        .HasColumnName("deployed_date");
-
-                    b.Property<bool>("IsDeployed")
-                        .HasColumnType("NUMBER(1)")
-                        .HasColumnName("is_deployed");
 
                     b.Property<DateTime>("ModifiedDate")
                         .HasColumnType("TIMESTAMP(7)")
@@ -112,10 +103,6 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                     b.HasIndex("Country");
 
                     b.HasIndex("CreatedDate");
-
-                    b.HasIndex("DeployedDate");
-
-                    b.HasIndex("IsDeployed");
 
                     b.HasIndex("ModifiedDate");
 
@@ -249,7 +236,7 @@ namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.Oracle
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("created_date");
 
-                    b.Property<DateTime>("ExpiryDate")
+                    b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("TIMESTAMP(7)")
                         .HasColumnName("expiry_date");
 

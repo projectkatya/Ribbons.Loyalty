@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
+namespace Ribbons.Loyalty.Data.Migrations.PartnerDbMigrations.MsSql
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -14,36 +14,18 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "t_db_server",
-                columns: table => new
-                {
-                    db_server_id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    provider = table.Column<int>(type: "int", nullable: false),
-                    connection_string = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_t_db_server", x => x.db_server_id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "t_partner",
                 columns: table => new
                 {
-                    partner_id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    partner_id = table.Column<long>(type: "bigint", nullable: false),
                     created_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     modified_date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     account_number = table.Column<string>(type: "nvarchar(12)", maxLength: 12, nullable: false),
                     alias = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     status = table.Column<int>(type: "int", nullable: false),
-                    is_deployed = table.Column<bool>(type: "bit", nullable: false),
-                    deployed_date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     business_name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    billing_address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    billing_address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     country = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: true),
                     state = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
                     city = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
@@ -52,19 +34,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_t_partner", x => x.partner_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "t_partner_db_config",
-                columns: table => new
-                {
-                    partner_id = table.Column<long>(type: "bigint", nullable: false),
-                    provider = table.Column<int>(type: "int", nullable: false),
-                    connection_string = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_t_partner_db_config", x => x.partner_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -142,7 +111,7 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                     password_salt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
                     password_hash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
                     is_expired = table.Column<bool>(type: "bit", nullable: false),
-                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    expiry_date = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -231,29 +200,13 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 });
 
             migrationBuilder.InsertData(
-                table: "t_db_server",
-                columns: new[] { "db_server_id", "connection_string", "name", "provider" },
-                values: new object[,]
-                {
-                    { 1L, "server=localhost;user id=sa;password=ASD123!@#;trustservercertificate=true", "localhost", 1 },
-                    { 2L, "server=host.docker.internal;user id=sa;password=ASD123!@#;trustservercertificate=true", "host.docker.internal", 1 }
-                });
-
-            migrationBuilder.InsertData(
                 table: "t_user_type",
                 columns: new[] { "user_type_id", "code", "description", "name" },
-                values: new object[] { 1, "admin", "System administrator. Manages global settings for the loyalty platform", "Administrator" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_db_server_name",
-                table: "t_db_server",
-                column: "name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_db_server_provider",
-                table: "t_db_server",
-                column: "provider");
+                values: new object[,]
+                {
+                    { 2, "partner_admin", "Partner administrator. Manages settings for the partner", "Partner Administrator" },
+                    { 3, "member", "Members who signed up for this partners' loyalty programs", "Member" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_partner_account_number",
@@ -283,16 +236,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 column: "created_date");
 
             migrationBuilder.CreateIndex(
-                name: "IX_t_partner_deployed_date",
-                table: "t_partner",
-                column: "deployed_date");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_is_deployed",
-                table: "t_partner",
-                column: "is_deployed");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_t_partner_modified_date",
                 table: "t_partner",
                 column: "modified_date");
@@ -311,11 +254,6 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
                 name: "IX_t_partner_zipcode",
                 table: "t_partner",
                 column: "zipcode");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_t_partner_db_config_provider",
-                table: "t_partner_db_config",
-                column: "provider");
 
             migrationBuilder.CreateIndex(
                 name: "IX_t_user_created_date",
@@ -516,13 +454,7 @@ namespace Ribbons.Loyalty.Data.Migrations.AdminDbMigrations.MsSql
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "t_db_server");
-
-            migrationBuilder.DropTable(
                 name: "t_partner");
-
-            migrationBuilder.DropTable(
-                name: "t_partner_db_config");
 
             migrationBuilder.DropTable(
                 name: "t_user_email");
